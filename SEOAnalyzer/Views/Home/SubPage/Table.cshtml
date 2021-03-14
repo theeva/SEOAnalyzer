@@ -1,0 +1,24 @@
+﻿@model Dictionary<string, int>
+<div class="table-responsive">
+    <table id="table_id" class="table table-striped">
+        <tr>
+            <th>Index</th>
+            <th>Word</th>
+            <th>Count</th>
+        </tr>
+        <tbody>
+            @{
+                int count = 1;
+                foreach (var item in Model)
+                {
+                    <tr>
+                        <td>@count</td>
+                        <td>@item.Key</td>
+                        <td>@item.Value</td>
+                    </tr>
+                    count++;
+                }
+            }
+        </tbody>
+    </table>
+</div>

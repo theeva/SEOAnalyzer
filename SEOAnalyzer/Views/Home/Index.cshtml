@@ -1,0 +1,87 @@
+﻿@model SEOAnalyzer.Models.ContentModel
+@{
+    ViewBag.Title = "SEO Analyzer";
+}
+
+<div class="jumbotron">
+    <h2>SEO Analyzer</h2>
+    @using (Html.BeginForm("Index", "Home", FormMethod.Post, new { @class = "form-horizontal", role = "form" }))
+    {
+        @Html.AntiForgeryToken() //Generates a hidden form field (anti-forgery token) that is validated when the form is submitted
+        <div class="editor-field">
+            @Html.TextAreaFor(model => model.Input, new { @class = "form-control rounded-0", @placeholder = ViewConstants.Input_Placeholder })
+            @Html.ValidationMessageFor(model => model.Input, "", new { @class = "text-danger" })
+            @Html.ValidationMessageFor(model => model.HasError, "", new { @class = "text-danger" })
+        </div>
+        <p class="lead">
+            <div class="row">
+                <div class="col-md-6">
+                    <label>
+                        @Html.CheckBoxFor(model => model.FilterStopWord)
+                        @Html.DisplayName(ViewConstants.PageFilterStopWord_Label)
+                    </label>
+                    <label>
+                        @Html.CheckBoxFor(model => model.CalculateNumberWordOccurence)
+                        @Html.DisplayName(ViewConstants.CalculateNumWordOccurence_Label)
+                    </label>
+                    <label>
+                        @Html.CheckBoxFor(model => model.CalculateNumberWordOccurenceInMetaTag)
+                        @Html.DisplayName(ViewConstants.CalculateNumberWordsOccurenceInMetaTag_Label)
+                    </label>
+                    <label>
+
+                        @Html.CheckBoxFor(model => model.CalculateNumberExternalLink)
+                        @Html.DisplayName(ViewConstants.CalculateNumberExternalLink_Label)
+                    </label>
+                    <label>
+                        @Html.ValidationMessageFor(model => model.ValidationChecked)
+                    </label>
+                    <br><br />
+                    <div class="col-md-6">
+                        <input type="submit" class="btn btn-primary btn-lg col-xs-12" value="Process" />
+                    </div>
+                </div>
+            </div>
+        </p>
+    }
+</div>
+
+@if (Model.IsValidModel)
+{
+    <div class="row">
+        @if (Model.CalculateNumberWordOccurence)
+        {
+            <div class="col-md-12">
+                <h2>Word Occurences</h2>
+                @Html.Partial("SubPage/Table", Model.NumberWordOccurences)
+            </div>
+        }
+
+        @if (Model.CalculateNumberWordOccurenceInMetaTag)
+        {
+            <div class="col-md-12">
+                <h2>Meta Tags Word Occurences</h2>
+                @Html.Partial("SubPage/Table", Model.NumberWordOccurencesFromMetaTags)
+            </div>
+        }
+
+        @if (Model.CalculateNumberExternalLink)
+        {
+            <div class="col-md-12">
+                <h2>External Links</h2>
+                @Html.Partial("SubPage/Table", Model.NumberExternalLinks)
+            </div>
+        }
+    </div>
+}
+<link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/1.10.24/css/jquery.dataTables.css">
+
+<script type="text/javascript" charset="utf8" src="https://cdn.datatables.net/1.10.24/js/jquery.dataTables.js"></script>
+
+@section scripts {
+    <script>
+        $(document).ready(function () {
+            $('#table_id').DataTable();
+        });
+    </script>
+}
